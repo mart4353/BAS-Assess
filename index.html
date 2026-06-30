@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spondylitis Self-Assessment | BAS-Assess</title>
+  <style>
+    /* ── Design Tokens ──────────────────────────────────────────── */
+    :root {
+      --c-primary:       #1a5f7a;
+      --c-primary-light: #2d8ab5;
+      --c-primary-dark:  #0d3d52;
+      --c-accent:        #3aab8e;
+      --c-accent-light:  #62c4a8;
+      --c-danger:        #c0392b;
+      --c-danger-bg:     #fff0ee;
+      --c-warning-bg:    #fffbeb;
+      --c-warning-border:#f59e0b;
+      --c-success:       #16a34a;
+      --c-info-bg:       #eff8ff;
+      --c-info-border:   #2d8ab5;
+
+      --c-bg:            #eef2f7;
+      --c-surface:       #ffffff;
+      --c-surface-alt:   #f6f9fc;
+      --c-text:          #18303d;
+      --c-text-muted:    #4e6c7c;
+      --c-text-faint:    #8ca8b5;
+      --c-border:        #cfdde5;
+
+      --radius:    14px;
+      --radius-sm: 9px;
+      --shadow-xs: 0 1px 4px rgba(26,95,122,.07);
+      --shadow-sm: 0 2px 10px rgba(26,95,122,.09);
+      --shadow-md: 0 4px 22px rgba(26,95,122,.13);
+    }
+
+    /* ── Reset ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, Helvetica, sans-serif;
+      background: var(--c-bg);
+      color: var(--c-text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    /* ── Sticky Header ──────────────────────────────────────────── */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: linear-gradient(135deg, var(--c-primary-dark) 0%, var(--c-primary) 100%);
+      color: #fff;
+      padding: 1rem 1.75rem;
+      box-shadow: var(--shadow-md);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .75rem;
+      max-width: 880px;
+      margin: auto;
+    }
+    .header-brand { display: flex; align-items: center; gap: .75rem; }
+    .header-logo  { font-size: 1.9rem; line-height: 1; }
+    .header-title { font-size: 1.15rem; font-weight: 700; letter-spacing: -.01em; }
+    .header-sub   { font-size: .78rem; opacity: .75; margin-top: .1rem; }
+
+    /* Progress bar */
+    .progress-bar {
+      height: 4px;
+      background: rgba(255,255,255,.22);
+      border-radius: 2px;
+      margin-top: .55rem;
+      width: 260px;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--c-accent-light);
+      border-radius: 2px;
+      transition: width .4s ease;
+    }
+
+    /* Language switcher */
+    .lang-group { display: flex; gap: .4rem; }
+    .lang-btn {
+      border: 2px solid rgba(255,255,255,.35);
+      border-radius: 30px;
+      background: transparent;
+      color: rgba(255,255,255,.82);
+      font-size: .82rem;
+      font-weight: 700;
+      padding: .3rem .85rem;
+      cursor: pointer;
+      transition: all .18s;
+      letter-spacing: .04em;
+    }
+    .lang-btn:hover   { background: rgba(255,255,255,.12); }
+    .lang-btn.active  { background: #fff; color: var(--c-primary); border-color: #fff; }
+
+    /* ── Layout ─────────────────────────────────────────────────── */
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    /* ── Card ───────────────────────────────────────────────────── */
+    .card {
+      background: var(--c-surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--c-border);
+      box-shadow: var(--shadow-sm);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 540px) {
+      .card { padding: 1.25rem 1rem; }
+      .container { padding: 1rem .75rem 2.5rem; }
+    }
+
+    /* ── Section Header ─────────────────────────────────────────── */
+    .sec-head {
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+      padding-bottom: 1.1rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--c-border);
+    }
+    .sec-icon {
+      width: 52px; height: 52px;
+      flex-shrink: 0;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--c-primary), var(--c-accent));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: var(--shadow-xs);
+    }
+    .sec-badge {
+      display: inline-block;
+      background: var(--c-primary);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      padding: .2rem .7rem;
+      border-radius: 30px;
+      margin-bottom: .3rem;
+    }
+    .sec-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--c-text);
+      line-height: 1.25;
+    }
+    .sec-sub {
+      font-size: .82rem;
+      color: var(--c-text-muted);
+      margin-top: .15rem;
+    }
+
+    /* ── Form Inputs ────────────────────────────────────────────── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 540px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .field { margin-bottom: 1rem; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--c-text-muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: .35rem;
+    }
+    .field input, .field select {
+      width: 100%;
+      padding: .7rem 1rem;
+      border: 2px solid var(--c-border);
+      border-radius: var(--radius-sm);
+      font-size: .97rem;
+      color: var(--c-text);
+      background: var(--c-surface);
+      outline: none;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--c-primary-light);
+      box-shadow: 0 0 0 3px rgba(45,138,181,.14);
+    }
+
+    /* ── Alerts ─────────────────────────────────────────────────── */
+    .alert {
+      display: flex;
+      gap: .75rem;
+      padding: .9rem 1.1rem;
+      border-radius: var(--radius-sm);
+      font-size: .88rem;
+      margin-bottom: 1.4rem;
+      line-height: 1.5;
+    }
+    .alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: .05rem; }
+    .alert-info    { background: var(--c-info-bg);    border-left: 4px solid var(--c-info-border); color: var(--c-primary-dark); }
+    .alert-warning { background: var(--c-warning-bg); border-left: 4px solid var(--c-warning-border); color: #78350f; }
+
+    /* ── Question ───────────────────────────────────────────────── */
+    .question {
+      padding: 1.2rem 0;
+      border-bottom: 1px solid var(--c-border);
+    }
+    .question:last-of-type { border-bottom: none; }
+
+    .q-label {
+      display: flex;
+      align-items: flex-start;
+      gap: .7rem;
+      margin-bottom: .9rem;
+      font-size: .97rem;
+    }
+    .q-num {
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      background: var(--c-primary);
+      color: #fff;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .75rem;
+      font-weight: 800;
+      margin-top: .15rem;
+    }
+    .q-text { flex: 1; color: var(--c-text); font-weight: 500; }
+    .q-text strong { color: var(--c-primary-dark); }
+
+    /* ── Slider ─────────────────────────────────────────────────── */
+    .slider-wrap { padding: .1rem .2rem; }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: .76rem;
+      color: var(--c-text-faint);
+      margin-bottom: .4rem;
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(to right, #3aab8e, #1a5f7a 50%, #c0392b);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid var(--c-primary);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform .15s, border-color .15s;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid var(--c-primary);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover,
+    input[type="range"]:focus::-webkit-slider-thumb {
+      transform: scale(1.18);
+      border-color: var(--c-primary-light);
+    }
+    .slider-ticks {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 2px;
+      margin-top: .3rem;
+    }
+    .slider-ticks span {
+      font-size: .7rem;
+      color: var(--c-text-faint);
+      text-align: center;
+      flex: 1;
+    }
+    .slider-value-row {
+      text-align: center;
+      margin-top: .5rem;
+    }
+    .slider-val {
+      display: inline-block;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--c-primary);
+      line-height: 1;
+      min-width: 2.2rem;
+      text-align: center;
+    }
+
+    /* ── Score Display ──────────────────────────────────────────── */
+    .score-box {
+      margin-top: 1.5rem;
+      padding: 1.4rem 1.5rem;
+      border-radius: var(--radius);
+      border: 2px solid var(--c-border);
+      background: var(--c-surface-alt);
+      text-align: center;
+      transition: border-color .3s, background .3s;
+    }
+    .score-box.danger {
+      border-color: var(--c-danger);
+      background: var(--c-danger-bg);
+    }
+    .score-label {
+      font-size: .8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--c-text-muted);
+      margin-bottom: .4rem;
+    }
+    .score-num {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--c-primary);
+      line-height: 1;
+    }
+    .score-box.danger .score-num { color: var(--c-danger); }
+    .score-note {
+      font-size: .82rem;
+      color: var(--c-text-muted);
+      margin-top: .5rem;
+    }
+    .score-box.danger .score-note { color: #7f1d1d; }
+
+    /* ── Mental Health Radio Options ────────────────────────────── */
+    .mh-question { margin-bottom: 1.8rem; }
+    .mh-opts {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: .6rem;
+      margin-top: .75rem;
+    }
+    .mh-opt { position: relative; }
+    .mh-opt input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .mh-opt label {
+      display: block;
+      padding: .65rem .75rem;
+      border: 2px solid var(--c-border);
+      border-radius: var(--radius-sm);
+      font-size: .88rem;
+      font-weight: 500;
+      text-align: center;
+      cursor: pointer;
+      color: var(--c-text-muted);
+      transition: border-color .15s, background .15s, color .15s;
+      line-height: 1.3;
+    }
+    .mh-opt label:hover { border-color: var(--c-primary-light); color: var(--c-primary); background: var(--c-info-bg); }
+    .mh-opt input[type="radio"]:checked + label {
+      border-color: var(--c-primary);
+      background: var(--c-primary);
+      color: #fff;
+    }
+
+    /* ── Resource Link ──────────────────────────────────────────── */
+    .resource-box {
+      margin-top: 1.5rem;
+      padding: 1rem 1.2rem;
+      background: var(--c-surface-alt);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius-sm);
+      font-size: .88rem;
+    }
+    .resource-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      margin-top: .4rem;
+      color: var(--c-primary);
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 2px solid rgba(26,95,122,.3);
+      transition: color .15s, border-color .15s;
+    }
+    .resource-link:hover { color: var(--c-primary-light); border-color: var(--c-primary-light); }
+
+    /* ── Buttons ────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .65rem 1.25rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: .93rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, opacity .15s;
+      text-decoration: none;
+      line-height: 1.3;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--c-primary);
+      color: var(--c-primary);
+    }
+    .btn-outline:hover { background: var(--c-info-bg); }
+    .btn-submit {
+      width: 100%;
+      justify-content: center;
+      font-size: 1.05rem;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-accent) 100%);
+      color: #fff;
+      box-shadow: var(--shadow-md);
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(26,95,122,.24); }
+
+    /* copy feedback inline */
+    .copy-feedback {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--c-success);
+      opacity: 0;
+      transition: opacity .25s;
+      margin-left: .25rem;
+    }
+    .copy-feedback.visible { opacity: 1; }
+
+    /* ── Footer ─────────────────────────────────────────────────── */
+    .app-footer {
+      text-align: center;
+      padding: 1.5rem 1rem 2rem;
+      font-size: .8rem;
+      color: var(--c-text-faint);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ████ HEADER ████ -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-logo">🩺</div>
+      <div>
+        <div class="header-title" id="hdr-title">Spondylitis Self-Assessment</div>
+        <div class="header-sub"  id="hdr-sub">BASDAI · BASFI · Emotional Well-being</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="lang-group">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn"        onclick="setLang('et')">ET</button>
+      <button class="lang-btn"        onclick="setLang('ru')">RU</button>
+    </div>
+  </div>
+</header>
+
+<!-- ████ MAIN ████ -->
+<main class="container">
+
+  <!-- ── Patient Info ───────────────────────────────────────────── -->
+  <div class="card" id="card-patient">
+    <div class="sec-head">
+      <div class="sec-icon">👤</div>
+      <div>
+        <div class="sec-badge" id="badge-patient">Patient Information</div>
+        <div class="sec-title" id="title-patient">Your Details</div>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label id="lbl-name">Patient Name</label>
+        <input type="text"  id="f-name"  autocomplete="name" />
+      </div>
+      <div class="field">
+        <label id="lbl-id">Personal ID / Isikukood</label>
+        <input type="text"  id="f-id"    autocomplete="off"  />
+      </div>
+    </div>
+    <div class="field" style="margin-top:.5rem">
+      <label id="lbl-email">Doctor's Email Address</label>
+      <input type="email" id="f-email" autocomplete="email" />
+    </div>
+
+    <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-top:1rem;">
+      <button class="btn btn-outline" onclick="copyURL()">
+        🔗 <span id="btn-copy-lbl">Copy Pre-filled URL</span>
+      </button>
+      <span class="copy-feedback" id="copy-feedback">✓ Copied!</span>
+    </div>
+  </div>
+
+  <!-- ── BASDAI ─────────────────────────────────────────────────── -->
+  <div class="card" id="card-basdai">
+    <div class="sec-head">
+      <div class="sec-icon">📊</div>
+      <div>
+        <div class="sec-badge" id="badge-basdai">Part 1 of 3</div>
+        <div class="sec-title">BASDAI</div>
+        <div class="sec-sub"  id="sub-basdai">Bath Ankylosing Spondylitis Disease Activity Index</div>
+      </div>
+    </div>
+    <div class="alert alert-info">
+      <span class="alert-icon">ℹ️</span>
+      <span id="info-basdai"></span>
+    </div>
+    <div id="basdai-questions"></div>
+    <div class="score-box" id="basdai-score-box">
+      <div class="score-label" id="basdai-score-lbl">BASDAI Score</div>
+      <div class="score-num"   id="basdai-score-val">0.0</div>
+      <div class="score-note"  id="basdai-score-note"></div>
+    </div>
+  </div>
+
+  <!-- ── BASFI ──────────────────────────────────────────────────── -->
+  <div class="card" id="card-basfi">
+    <div class="sec-head">
+      <div class="sec-icon">🏃</div>
+      <div>
+        <div class="sec-badge" id="badge-basfi">Part 2 of 3</div>
+        <div class="sec-title">BASFI</div>
+        <div class="sec-sub"  id="sub-basfi">Bath Ankylosing Spondylitis Functional Index</div>
+      </div>
+    </div>
+    <div class="alert alert-info">
+      <span class="alert-icon">ℹ️</span>
+      <span id="info-basfi"></span>
+    </div>
+    <div id="basfi-questions"></div>
+    <div class="score-box" id="basfi-score-box">
+      <div class="score-label" id="basfi-score-lbl">BASFI Score</div>
+      <div class="score-num"   id="basfi-score-val">0.0</div>
+      <div class="score-note"  id="basfi-score-note"></div>
+    </div>
+  </div>
+
+  <!-- ── Mental Health ──────────────────────────────────────────── -->
+  <div class="card" id="card-mental">
+    <div class="sec-head">
+      <div class="sec-icon">💚</div>
+      <div>
+        <div class="sec-badge" id="badge-mental">Part 3 of 3</div>
+        <div class="sec-title" id="title-mental">Emotional Well-being</div>
+        <div class="sec-sub"   id="sub-mental">Mental Health &amp; Quality of Life</div>
+      </div>
+    </div>
+    <div id="mental-questions"></div>
+    <div class="resource-box" id="resource-box">
+      <span id="resource-text"></span>
+      <br/>
+      <a href="https://peaasi.ee" target="_blank" rel="noopener" class="resource-link">
+        🧠 peaasi.ee <span style="font-size:.75rem;opacity:.7">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Submit ─────────────────────────────────────────────────── -->
+  <div class="card">
+    <div class="alert alert-warning" style="margin-bottom:1.5rem;">
+      <span class="alert-icon">⚠️</span>
+      <span id="submit-warning"></span>
+    </div>
+    <button class="btn btn-submit" onclick="handleSubmit()">
+      📧 <span id="btn-submit-lbl">Confirm and Send to Doctor</span>
+    </button>
+  </div>
+
+</main>
+
+<footer class="app-footer">
+  <span id="footer-text">BAS-Assess · Spondylitis Self-Assessment Tool · For medical use only</span>
+</footer>
+
+<script>
+/* ================================================================
+   TRANSLATIONS
+   ================================================================ */
+const T = {
+  en: {
+    /* header */
+    hdr_title : 'Spondylitis Self-Assessment',
+    hdr_sub   : 'BASDAI · BASFI · Emotional Well-being',
+    /* patient section */
+    badge_patient  : 'Patient Information',
+    title_patient  : 'Your Details',
+    lbl_name       : 'Patient Name',
+    ph_name        : 'Full Name',
+    lbl_id         : 'Personal ID / Isikukood',
+    ph_id          : 'e.g. 38501010000',
+    lbl_email      : "Doctor's Email Address",
+    ph_email       : 'doctor@hospital.ee',
+    btn_copy       : 'Copy Pre-filled URL',
+    copied         : '✓ Copied!',
+    /* BASDAI */
+    badge_basdai : 'Part 1 of 3',
+    sub_basdai   : 'Bath Ankylosing Spondylitis Disease Activity Index',
+    info_basdai  : 'Please rate how severe each of the following problems has been over the past week. Move the slider to indicate your answer.',
+    scale_lo     : 'None',
+    scale_hi     : 'Very Severe',
+    basdai_qs    : [
+      'How would you describe the overall level of <strong>fatigue / tiredness</strong> you have experienced?',
+      'How would you describe the overall level of <strong>AS neck, back or hip pain</strong> you have had?',
+      'How would you describe the overall level of <strong>pain / swelling in joints</strong> other than neck, back and hips?',
+      'How would you describe the overall level of <strong>discomfort from areas tender to touch</strong> or pressure? (Enthesitis)',
+      'How would you describe the overall level of <strong>morning stiffness intensity</strong> from the time you wake up?',
+      'How long does your <strong>morning stiffness</strong> last from the time you wake up?',
+    ],
+    basdai_q6_lo : '0 hours',
+    basdai_q6_hi : '2 + hours',
+    basdai_score_lbl  : 'BASDAI Score',
+    basdai_score_note : 'Score range: 0 – 10',
+    basdai_high_note  : '⚠️ Score ≥ 4 indicates high disease activity — please discuss with your doctor.',
+    /* BASFI */
+    badge_basfi : 'Part 2 of 3',
+    sub_basfi   : 'Bath Ankylosing Spondylitis Functional Index',
+    info_basfi  : 'For each activity, indicate how well you have been able to manage over the past week.',
+    basfi_lo    : 'Easy',
+    basfi_hi    : 'Impossible',
+    basfi_qs    : [
+      'Putting on your <strong>socks or tights</strong> without help or aids',
+      '<strong>Bending forward</strong> from the waist to pick up a pen from the floor without an aid',
+      'Reaching up to a <strong>high shelf</strong> without help or aids',
+      'Getting up from an <strong>armless dining room chair</strong> without using your hands or any other help',
+      'Getting up <strong>off the floor</strong> without any help from lying on your back',
+      'Standing <strong>unsupported for 10 minutes</strong> without discomfort',
+      'Climbing <strong>12 – 15 steps</strong> without using a handrail, one foot per step',
+      '<strong>Looking over your shoulder</strong> without turning your body',
+      'Doing <strong>physically demanding activities</strong> (e.g. physiotherapy, gardening or sport)',
+      'Doing a <strong>full day\'s activities</strong> whether at home or at work',
+    ],
+    basfi_score_lbl  : 'BASFI Score',
+    basfi_score_note : 'Score range: 0 – 10',
+    /* Mental Health */
+    badge_mental  : 'Part 3 of 3',
+    title_mental  : 'Emotional Well-being',
+    sub_mental    : 'Mental Health & Quality of Life',
+    mental_qs     : [
+      'How has your condition affected your <strong>emotional wellbeing</strong> over the past week?',
+      'How would you rate your <strong>sleep quality</strong> in the past week?',
+      'How much has <strong>pain affected your social activities</strong> and relationships?',
+    ],
+    mental_opts : [
+      ['Not at all','Slightly','Moderately','Significantly','Severely'],
+      ['Very good','Good','Fair','Poor','Very poor'],
+      ['Not at all','Slightly','Moderately','Significantly','Severely'],
+    ],
+    resource_text : 'If you are experiencing mental health challenges, support is available:',
+    /* Submit */
+    submit_warning : 'Please review all your answers before submitting. Clicking the button below will open your email client with the completed assessment.',
+    btn_submit     : 'Confirm and Send to Doctor',
+    /* Footer */
+    footer_text : 'BAS-Assess · Spondylitis Self-Assessment Tool · For medical use only',
+    /* Validation */
+    err_email : "Please enter the Doctor's email address before submitting.",
+    /* Email body strings */
+    email_subject  : 'Spondylitis Assessment',
+    email_greeting : 'Dear Doctor,\n\nPlease find the completed spondylitis self-assessment below.\n\n',
+    email_p0 : '══════════════════════════════════\nPATIENT INFORMATION\n══════════════════════════════════\n',
+    email_p1 : '\n══════════════════════════════════\nPART 1 — BASDAI (Disease Activity)\n══════════════════════════════════\n',
+    email_p2 : '\n══════════════════════════════════\nPART 2 — BASFI (Functional Index)\n══════════════════════════════════\n',
+    email_p3 : '\n══════════════════════════════════\nPART 3 — EMOTIONAL WELL-BEING\n══════════════════════════════════\n',
+    email_sig : '\n\n──────────────────────────────────\nGenerated by BAS-Assess Self-Assessment Tool\n',
+    high_activity : '[HIGH DISEASE ACTIVITY]',
+  },
+
+  et: {
+    hdr_title : 'Spondüliidi Enesehindamine',
+    hdr_sub   : 'BASDAI · BASFI · Emotsionaalne heaolu',
+    badge_patient  : 'Patsiendi andmed',
+    title_patient  : 'Teie andmed',
+    lbl_name       : 'Patsiendi nimi',
+    ph_name        : 'Eesnimi Perekonnanimi',
+    lbl_id         : 'Isikukood',
+    ph_id          : 'nt. 38501010000',
+    lbl_email      : 'Arsti e-posti aadress',
+    ph_email       : 'arst@haigla.ee',
+    btn_copy       : 'Kopeeri eeltäidetud URL',
+    copied         : '✓ Kopeeritud!',
+    badge_basdai : '1. osa 3-st',
+    sub_basdai   : 'Bathi anküloseeriva spondüliidi haiguse aktiivsuse indeks',
+    info_basdai  : 'Palun hinnake, kui raske on olnud iga järgmine probleem viimase nädala jooksul. Liigutage liugurit vastuse märkimiseks.',
+    scale_lo     : 'Puudub',
+    scale_hi     : 'Väga raske',
+    basdai_qs    : [
+      'Kuidas kirjeldaksite üldist <strong>väsimuse / kurnatuse</strong> taset, mida olete kogenud?',
+      'Kuidas kirjeldaksite üldist <strong>AS-i kaela-, selja- või puusavalu</strong> taset?',
+      'Kuidas kirjeldaksite üldist <strong>valu / paistetust liigestes</strong> (v.a kael, selg ja puusad)?',
+      'Kuidas kirjeldaksite üldist <strong>ebamugavust valutundlikest piirkondadest</strong>? (Entesiit)',
+      'Kuidas kirjeldaksite üldist <strong>hommikuse jäikuse intensiivsust</strong> ärkamise hetkest?',
+      'Kui kaua kestab teie <strong>hommikune jäikus</strong> pärast ärkamist?',
+    ],
+    basdai_q6_lo : '0 tundi',
+    basdai_q6_hi : '2+ tundi',
+    basdai_score_lbl  : 'BASDAI skoor',
+    basdai_score_note : 'Skoori vahemik: 0 – 10',
+    basdai_high_note  : '⚠️ Skoor ≥ 4 näitab kõrget haiguse aktiivsust — pöörduge oma arsti poole.',
+    badge_basfi : '2. osa 3-st',
+    sub_basfi   : 'Bathi anküloseeriva spondüliidi funktsionaalne indeks',
+    info_basfi  : 'Märkige iga tegevuse kohta, kui hästi olete viimase nädala jooksul hakkama saanud.',
+    basfi_lo    : 'Lihtne',
+    basfi_hi    : 'Võimatu',
+    basfi_qs    : [
+      '<strong>Sokkide või sukkpükste</strong> jalga panek ilma abita',
+      '<strong>Ettepoole kummardamine</strong> vöökohast, et korjata põrandalt pliiats ilma abita',
+      'Kättejõudmine <strong>kõrgele riiulile</strong> ilma abita',
+      'Tõusmine <strong>käetugedeta toolilt</strong> ilma käsi või muud abi kasutamata',
+      'Tõusmine <strong>põrandalt</strong> selili lamavast asendist ilma abita',
+      'Seismine <strong>10 minutit ilma toeta</strong> ebamugavust tundmata',
+      '<strong>12 – 15 astme ronimine</strong> ilma käsipuu kasutamata, üks jalg astme kohta',
+      '<strong>Üle õla vaatamine</strong> ilma keha pööramiseta',
+      '<strong>Füüsiliselt nõudlike tegevuste</strong> sooritamine (nt füsioteraapia, aiandus, sport)',
+      '<strong>Terve päeva tegevuste</strong> tegemine kodus või tööl',
+    ],
+    basfi_score_lbl  : 'BASFI skoor',
+    basfi_score_note : 'Skoori vahemik: 0 – 10',
+    badge_mental  : '3. osa 3-st',
+    title_mental  : 'Emotsionaalne heaolu',
+    sub_mental    : 'Vaimne tervis ja elukvaliteet',
+    mental_qs     : [
+      'Kuidas on teie seisund mõjutanud teie <strong>emotsionaalset heaolu</strong> viimase nädala jooksul?',
+      'Kuidas hindaksite oma <strong>une kvaliteeti</strong> viimase nädala jooksul?',
+      'Kuivõrd on <strong>valu mõjutanud teie sotsiaalset tegevust</strong> ja suhteid?',
+    ],
+    mental_opts : [
+      ['Üldse mitte','Kergelt','Mõõdukalt','Märkimisväärselt','Tugevalt'],
+      ['Väga hea','Hea','Rahuldav','Halb','Väga halb'],
+      ['Üldse mitte','Kergelt','Mõõdukalt','Märkimisväärselt','Tugevalt'],
+    ],
+    resource_text : 'Kui teil esineb vaimse tervise probleeme, on abi saadaval:',
+    submit_warning : 'Palun kontrollige kõik vastused enne esitamist. Alloleval nupul klõpsates avaneb teie e-posti klient eeltäidetud andmetega.',
+    btn_submit     : 'Kinnita ja saada arstile',
+    footer_text : 'BAS-Assess · Spondüliidi enesehindamise vahend · Ainult meditsiiniliseks kasutuseks',
+    err_email : 'Palun sisestage arsti e-posti aadress enne esitamist.',
+    email_subject  : 'Spondüliidi hindamine',
+    email_greeting : 'Lugupeetud arst,\n\nPalun leiate allpool täidetud spondüliidi enesehindamise vormi.\n\n',
+    email_p0 : '══════════════════════════════════\nPATSIENDI ANDMED\n══════════════════════════════════\n',
+    email_p1 : '\n══════════════════════════════════\n1. OSA — BASDAI (Haiguse aktiivsus)\n══════════════════════════════════\n',
+    email_p2 : '\n══════════════════════════════════\n2. OSA — BASFI (Funktsionaalne indeks)\n══════════════════════════════════\n',
+    email_p3 : '\n══════════════════════════════════\n3. OSA — EMOTSIONAALNE HEAOLU\n══════════════════════════════════\n',
+    email_sig : '\n\n──────────────────────────────────\nLoodud BAS-Assess enesehindamise vahendiga\n',
+    high_activity : '[KÕRGE HAIGUSE AKTIIVSUS]',
+  },
+
+  ru: {
+    hdr_title : 'Самооценка спондилита',
+    hdr_sub   : 'BASDAI · BASFI · Эмоциональное благополучие',
+    badge_patient  : 'Данные пациента',
+    title_patient  : 'Ваши данные',
+    lbl_name       : 'Имя пациента',
+    ph_name        : 'Имя Фамилия',
+    lbl_id         : 'Личный код / ID',
+    ph_id          : 'напр. 38501010000',
+    lbl_email      : 'Электронная почта врача',
+    ph_email       : 'vrach@bolniza.ee',
+    btn_copy       : 'Скопировать заполненный URL',
+    copied         : '✓ Скопировано!',
+    badge_basdai : 'Часть 1 из 3',
+    sub_basdai   : 'Батский индекс активности анкилозирующего спондилита',
+    info_basdai  : 'Пожалуйста, оцените тяжесть каждой из следующих проблем за последнюю неделю. Переместите ползунок для указания ответа.',
+    scale_lo     : 'Нет',
+    scale_hi     : 'Очень сильно',
+    basdai_qs    : [
+      'Как вы оцениваете общий уровень <strong>усталости / утомляемости</strong>, которую испытывали?',
+      'Как вы оцениваете общий уровень <strong>боли в шее, спине или бёдрах</strong> (АС)?',
+      'Как вы оцениваете общий уровень <strong>боли / отёка в суставах</strong> (кроме шеи, спины и бёдер)?',
+      'Как вы оцениваете общий уровень <strong>дискомфорта от болезненных при прикосновении зон</strong>? (Энтезит)',
+      'Как вы оцениваете общий уровень <strong>интенсивности утренней скованности</strong> с момента пробуждения?',
+      'Как долго длится ваша <strong>утренняя скованность</strong> с момента пробуждения?',
+    ],
+    basdai_q6_lo : '0 часов',
+    basdai_q6_hi : '2+ часа',
+    basdai_score_lbl  : 'Индекс BASDAI',
+    basdai_score_note : 'Диапазон: 0 – 10',
+    basdai_high_note  : '⚠️ Индекс ≥ 4 указывает на высокую активность заболевания — обсудите с вашим врачом.',
+    badge_basfi : 'Часть 2 из 3',
+    sub_basfi   : 'Батский функциональный индекс анкилозирующего спондилита',
+    info_basfi  : 'Для каждого вида деятельности укажите, насколько хорошо вы справлялись за последнюю неделю.',
+    basfi_lo    : 'Легко',
+    basfi_hi    : 'Невозможно',
+    basfi_qs    : [
+      'Надевание <strong>носков или чулок</strong> без посторонней помощи',
+      '<strong>Наклон вперёд</strong> от талии, чтобы поднять ручку с пола без помощи',
+      'Дотянуться до <strong>высокой полки</strong> без посторонней помощи',
+      'Вставание с <strong>кресла без подлокотников</strong> без использования рук',
+      'Вставание <strong>с пола</strong> из положения лёжа на спине без помощи',
+      'Стояние <strong>без опоры в течение 10 минут</strong> без дискомфорта',
+      'Подъём по <strong>12 – 15 ступенькам</strong> без перил, по одной ноге на ступеньку',
+      '<strong>Взгляд через плечо</strong> без поворота тела',
+      'Выполнение <strong>физически сложных действий</strong> (физиотерапия, садоводство, спорт)',
+      'Выполнение <strong>полного рабочего дня</strong> дома или на работе',
+    ],
+    basfi_score_lbl  : 'Индекс BASFI',
+    basfi_score_note : 'Диапазон: 0 – 10',
+    badge_mental  : 'Часть 3 из 3',
+    title_mental  : 'Эмоциональное благополучие',
+    sub_mental    : 'Психическое здоровье и качество жизни',
+    mental_qs     : [
+      'Как ваше состояние повлияло на ваше <strong>эмоциональное благополучие</strong> за последнюю неделю?',
+      'Как вы оцениваете <strong>качество сна</strong> за последнюю неделю?',
+      'Насколько <strong>боль повлияла на вашу социальную активность</strong> и отношения?',
+    ],
+    mental_opts : [
+      ['Нисколько','Немного','Умеренно','Значительно','Сильно'],
+      ['Очень хорошо','Хорошо','Удовлетворительно','Плохо','Очень плохо'],
+      ['Нисколько','Немного','Умеренно','Значительно','Сильно'],
+    ],
+    resource_text : 'Если у вас есть проблемы с психическим здоровьем, помощь доступна:',
+    submit_warning : 'Пожалуйста, проверьте все ответы перед отправкой. Нажав кнопку ниже, откроется ваш почтовый клиент.',
+    btn_submit     : 'Подтвердить и отправить врачу',
+    footer_text : 'BAS-Assess · Инструмент самооценки спондилита · Только для медицинского использования',
+    err_email : 'Пожалуйста, введите электронную почту врача перед отправкой.',
+    email_subject  : 'Оценка спондилита',
+    email_greeting : 'Уважаемый доктор,\n\nПожалуйста, найдите ниже заполненную форму самооценки спондилита.\n\n',
+    email_p0 : '══════════════════════════════════\nДАННЫЕ ПАЦИЕНТА\n══════════════════════════════════\n',
+    email_p1 : '\n══════════════════════════════════\nЧАСТЬ 1 — BASDAI (Активность болезни)\n══════════════════════════════════\n',
+    email_p2 : '\n══════════════════════════════════\nЧАСТЬ 2 — BASFI (Функциональный индекс)\n══════════════════════════════════\n',
+    email_p3 : '\n══════════════════════════════════\nЧАСТЬ 3 — ЭМОЦИОНАЛЬНОЕ БЛАГОПОЛУЧИЕ\n══════════════════════════════════\n',
+    email_sig : '\n\n──────────────────────────────────\nСоздано инструментом самооценки BAS-Assess\n',
+    high_activity : '[ВЫСОКАЯ АКТИВНОСТЬ ЗАБОЛЕВАНИЯ]',
+  },
+};
+
+/* ================================================================
+   STATE
+   ================================================================ */
+let lang = 'en';
+
+// Slider values persist across language switches
+const sliders = {};
+for (let i = 1; i <= 6;  i++) sliders[`b${i}`] = 0;   // BASDAI
+for (let i = 1; i <= 10; i++) sliders[`f${i}`] = 0;   // BASFI
+
+// Mental health answers: index into opts array, or null
+const mhAnswers = [null, null, null];
+
+/* ================================================================
+   INIT
+   ================================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  const p = new URLSearchParams(location.search);
+  if (p.get('lang'))  lang = p.get('lang');
+  if (p.get('name'))  document.getElementById('f-name').value  = decodeURIComponent(p.get('name'));
+  if (p.get('id'))    document.getElementById('f-id').value    = decodeURIComponent(p.get('id'));
+  if (p.get('email')) document.getElementById('f-email').value = decodeURIComponent(p.get('email'));
+
+  renderAll();
+  updateLangBtns();
+});
+
+/* ================================================================
+   LANGUAGE SWITCH
+   ================================================================ */
+function setLang(l) {
+  if (!T[l]) return;
+  lang = l;
+  updateLangBtns();
+  renderAll();
+}
+
+function updateLangBtns() {
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().toLowerCase() === lang);
+  });
+}
+
+function tr(key) {
+  return (T[lang] && T[lang][key] !== undefined) ? T[lang][key] : (T.en[key] || '');
+}
+
+/* ================================================================
+   RENDER ALL
+   ================================================================ */
+function renderAll() {
+  const L = T[lang];
+
+  // Header
+  document.getElementById('hdr-title').textContent = L.hdr_title;
+  document.getElementById('hdr-sub').textContent   = L.hdr_sub;
+  document.title = L.hdr_title;
+  document.documentElement.lang = lang;
+
+  // Patient card
+  document.getElementById('badge-patient').textContent  = L.badge_patient;
+  document.getElementById('title-patient').textContent  = L.title_patient;
+  document.getElementById('lbl-name').textContent       = L.lbl_name;
+  document.getElementById('lbl-id').textContent         = L.lbl_id;
+  document.getElementById('lbl-email').textContent      = L.lbl_email;
+  document.getElementById('f-name').placeholder         = L.ph_name;
+  document.getElementById('f-id').placeholder           = L.ph_id;
+  document.getElementById('f-email').placeholder        = L.ph_email;
+  document.getElementById('btn-copy-lbl').textContent   = L.btn_copy;
+
+  // BASDAI section headers
+  document.getElementById('badge-basdai').textContent   = L.badge_basdai;
+  document.getElementById('sub-basdai').textContent     = L.sub_basdai;
+  document.getElementById('info-basdai').textContent    = L.info_basdai;
+  document.getElementById('basdai-score-lbl').textContent = L.basdai_score_lbl;
+
+  // BASFI section headers
+  document.getElementById('badge-basfi').textContent    = L.badge_basfi;
+  document.getElementById('sub-basfi').textContent      = L.sub_basfi;
+  document.getElementById('info-basfi').textContent     = L.info_basfi;
+  document.getElementById('basfi-score-lbl').textContent  = L.basfi_score_lbl;
+  document.getElementById('basfi-score-note').textContent = L.basfi_score_note;
+
+  // Mental section
+  document.getElementById('badge-mental').textContent   = L.badge_mental;
+  document.getElementById('title-mental').textContent   = L.title_mental;
+  document.getElementById('sub-mental').textContent     = L.sub_mental;
+  document.getElementById('resource-text').textContent  = L.resource_text;
+
+  // Submit
+  document.getElementById('submit-warning').textContent = L.submit_warning;
+  document.getElementById('btn-submit-lbl').textContent = L.btn_submit;
+  document.getElementById('footer-text').textContent    = L.footer_text;
+
+  renderBASDAI();
+  renderBASFI();
+  renderMental();
+  calcBASDAI();
+  calcBASFI();
+  updateProgress();
+}
+
+/* ================================================================
+   BUILD BASDAI QUESTIONS
+   ================================================================ */
+function renderBASDAI() {
+  const L = T[lang];
+  const c = document.getElementById('basdai-questions');
+  c.innerHTML = '';
+
+  L.basdai_qs.forEach((qText, idx) => {
+    const n  = idx + 1;
+    const id = `b${n}`;
+    const isQ6 = n === 6;
+    const lo = isQ6 ? L.basdai_q6_lo : ('0 – ' + L.scale_lo);
+    const hi = isQ6 ? L.basdai_q6_hi : ('10 – ' + L.scale_hi);
+    const val = sliders[id];
+
+    c.innerHTML += `
+      <div class="question">
+        <div class="q-label">
+          <span class="q-num">${n}</span>
+          <span class="q-text">${qText}</span>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-labels"><span>${lo}</span><span>${hi}</span></div>
+          <input type="range" min="0" max="10" step="0.5" value="${val}"
+                 id="sl-${id}" oninput="onSlider('${id}',this.value,'basdai')">
+          <div class="slider-ticks">
+            ${Array.from({length:11},(_,i)=>`<span>${i}</span>`).join('')}
+          </div>
+          <div class="slider-value-row">
+            <span class="slider-val" id="sv-${id}">${fmt(val)}</span>
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+/* ================================================================
+   BUILD BASFI QUESTIONS
+   ================================================================ */
+function renderBASFI() {
+  const L = T[lang];
+  const c = document.getElementById('basfi-questions');
+  c.innerHTML = '';
+
+  L.basfi_qs.forEach((qText, idx) => {
+    const n  = idx + 1;
+    const id = `f${n}`;
+    const val = sliders[id];
+
+    c.innerHTML += `
+      <div class="question">
+        <div class="q-label">
+          <span class="q-num">${n}</span>
+          <span class="q-text">${qText}</span>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-labels">
+            <span>0 – ${L.basfi_lo}</span>
+            <span>10 – ${L.basfi_hi}</span>
+          </div>
+          <input type="range" min="0" max="10" step="0.5" value="${val}"
+                 id="sl-${id}" oninput="onSlider('${id}',this.value,'basfi')">
+          <div class="slider-ticks">
+            ${Array.from({length:11},(_,i)=>`<span>${i}</span>`).join('')}
+          </div>
+          <div class="slider-value-row">
+            <span class="slider-val" id="sv-${id}">${fmt(val)}</span>
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+/* ================================================================
+   BUILD MENTAL HEALTH OPTIONS
+   ================================================================ */
+function renderMental() {
+  const L = T[lang];
+  const c = document.getElementById('mental-questions');
+  c.innerHTML = '';
+
+  L.mental_qs.forEach((qText, qi) => {
+    let optsHTML = '';
+    L.mental_opts[qi].forEach((opt, oi) => {
+      const id      = `mh${qi}_${oi}`;
+      const checked = mhAnswers[qi] === oi ? 'checked' : '';
+      optsHTML += `
+        <div class="mh-opt">
+          <input type="radio" name="mh${qi}" id="${id}" value="${oi}" ${checked}
+                 onchange="mhAnswers[${qi}]=${oi};updateProgress()">
+          <label for="${id}">${opt}</label>
+        </div>`;
+    });
+    c.innerHTML += `
+      <div class="mh-question">
+        <div class="q-label">
+          <span class="q-num">${qi+1}</span>
+          <span class="q-text">${qText}</span>
+        </div>
+        <div class="mh-opts">${optsHTML}</div>
+      </div>`;
+  });
+}
+
+/* ================================================================
+   SLIDER INTERACTION
+   ================================================================ */
+function onSlider(id, rawVal, section) {
+  const v = parseFloat(rawVal);
+  sliders[id] = v;
+  const el = document.getElementById(`sv-${id}`);
+  if (el) el.textContent = fmt(v);
+  if (section === 'basdai') calcBASDAI();
+  else                      calcBASFI();
+  updateProgress();
+}
+
+function fmt(v) {
+  const n = parseFloat(v);
+  return Number.isInteger(n) ? String(n) : n.toFixed(1);
+}
+
+/* ================================================================
+   SCORE CALCULATIONS
+   ================================================================ */
+function calcBASDAI() {
+  const q = Array.from({length:6}, (_,i) => sliders[`b${i+1}`] || 0);
+  // Formula: (Q1+Q2+Q3+Q4 + average(Q5,Q6)) / 5
+  const score = (q[0] + q[1] + q[2] + q[3] + (q[4] + q[5]) / 2) / 5;
+  const r = Math.round(score * 10) / 10;
+
+  document.getElementById('basdai-score-val').textContent  = r.toFixed(1);
+  const box  = document.getElementById('basdai-score-box');
+  const note = document.getElementById('basdai-score-note');
+  if (r >= 4) {
+    box.classList.add('danger');
+    note.textContent = tr('basdai_high_note');
+  } else {
+    box.classList.remove('danger');
+    note.textContent = tr('basdai_score_note');
+  }
+}
+
+function calcBASFI() {
+  const sum = Array.from({length:10}, (_,i) => sliders[`f${i+1}`] || 0).reduce((a,b)=>a+b,0);
+  document.getElementById('basfi-score-val').textContent = (sum / 10).toFixed(1);
+}
+
+/* ================================================================
+   PROGRESS BAR
+   ================================================================ */
+function updateProgress() {
+  // All 16 sliders count as answered; track only mental radio picks
+  const mhDone = mhAnswers.filter(a => a !== null).length;
+  const total  = 3;  // 3 mental questions are the only "optionally unanswered"
+  const pct    = Math.round(((mhDone / total) * 40) + 60); // always >= 60% from sliders
+  document.getElementById('progress-fill').style.width = `${Math.min(pct,100)}%`;
+}
+
+/* ================================================================
+   COPY PRE-FILLED URL
+   ================================================================ */
+function copyURL() {
+  const base = location.href.split('?')[0];
+  const u    = new URL(base);
+  const name  = document.getElementById('f-name').value.trim();
+  const id    = document.getElementById('f-id').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  u.searchParams.set('lang', lang);
+  if (name)  u.searchParams.set('name',  name);
+  if (id)    u.searchParams.set('id',    id);
+  if (email) u.searchParams.set('email', email);
+
+  const url = u.toString();
+
+  const showFeedback = () => {
+    const fb = document.getElementById('copy-feedback');
+    fb.textContent = tr('copied');
+    fb.classList.add('visible');
+    setTimeout(() => fb.classList.remove('visible'), 2500);
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(showFeedback).catch(() => fallbackCopy(url));
+  } else {
+    fallbackCopy(url);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+  const fb = document.getElementById('copy-feedback');
+  fb.textContent = tr('copied');
+  fb.classList.add('visible');
+  setTimeout(() => fb.classList.remove('visible'), 2500);
+}
+
+/* ================================================================
+   EMAIL SUBMISSION
+   ================================================================ */
+function handleSubmit() {
+  const L     = T[lang];
+  const name  = document.getElementById('f-name').value.trim()  || '—';
+  const id    = document.getElementById('f-id').value.trim()    || '—';
+  const email = document.getElementById('f-email').value.trim();
+
+  if (!email) {
+    alert(L.err_email);
+    document.getElementById('f-email').focus();
+    return;
+  }
+
+  /* Scores */
+  const bq    = Array.from({length:6},  (_,i) => sliders[`b${i+1}`] || 0);
+  const fq    = Array.from({length:10}, (_,i) => sliders[`f${i+1}`] || 0);
+  const bScore = (bq[0]+bq[1]+bq[2]+bq[3]+(bq[4]+bq[5])/2) / 5;
+  const fScore = fq.reduce((a,b)=>a+b,0) / 10;
+  const bHigh  = bScore >= 4;
+
+  /* Strip HTML tags for plain-text email */
+  const strip = html => html.replace(/<[^>]+>/g, '');
+
+  /* Build body */
+  let body = L.email_greeting;
+
+  body += L.email_p0;
+  body += `Name:  ${name}\n`;
+  body += `ID:    ${id}\n`;
+
+  body += L.email_p1;
+  body += `BASDAI Score: ${bScore.toFixed(2)} / 10${bHigh ? '  ' + L.high_activity : ''}\n\n`;
+  L.basdai_qs.forEach((q, i) => {
+    body += `Q${i+1}: ${strip(q)}\n      → ${fmt(bq[i])} / 10\n`;
+  });
+
+  body += L.email_p2;
+  body += `BASFI Score: ${fScore.toFixed(2)} / 10\n\n`;
+  L.basfi_qs.forEach((q, i) => {
+    body += `Q${i+1}: ${strip(q)}\n      → ${fmt(fq[i])} / 10\n`;
+  });
+
+  body += L.email_p3;
+  L.mental_qs.forEach((q, i) => {
+    const ans = mhAnswers[i] !== null ? L.mental_opts[i][mhAnswers[i]] : '—';
+    body += `Q${i+1}: ${strip(q)}\n      → ${ans}\n\n`;
+  });
+
+  body += L.email_sig;
+
+  const subject = `${L.email_subject} — ${name} — ${id}`;
+  const mailto  = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  window.location.href = mailto;
+}
+</script>
+</body>
+</html>
