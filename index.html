@@ -155,10 +155,9 @@
       background: linear-gradient(to right, #3aab8e, #1a5f7a 50%, #c0392b);
       outline: none; cursor: pointer; transition: background .3s;
     }
-    /* Pristine: greyed-out until first touch */
-    .slider-wrap.pristine input[type="range"] {
-      background: linear-gradient(to right, #b5cad3, #8daab8); opacity: .5;
-    }
+    /* Pristine: track stays bright but thumb is invisible until first touch */
+    .slider-wrap.pristine input[type="range"]::-webkit-slider-thumb { opacity: 0; }
+    .slider-wrap.pristine input[type="range"]::-moz-range-thumb      { opacity: 0; }
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
       background: #fff; border: 3px solid var(--c-primary); cursor: pointer;
