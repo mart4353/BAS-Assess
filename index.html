@@ -176,11 +176,7 @@
       display: inline-block; font-size: 1.6rem; font-weight: 800;
       color: var(--c-primary); line-height: 1; min-width: 2.2rem; text-align: center;
     }
-    .slider-wrap.pristine .slider-val { color: var(--c-text-faint); font-size: 1.4rem; }
-    .pristine-hint {
-      text-align: center; font-size: .73rem; color: var(--c-text-faint);
-      font-style: italic; margin-top: .15rem; pointer-events: none;
-    }
+    .slider-wrap.pristine .slider-val { color: var(--c-text-faint); font-size: .82rem; font-weight: 500; font-style: italic; }
 
     /* ── Score Box ──────────────────────────────────────────────── */
     .score-box {
@@ -730,9 +726,8 @@ function sliderHTML(id, lo, hi, pristine, val, hint) {
              id="sl-${id}" oninput="onSlider('${id}',this.value,'${id.startsWith('b') ? 'basdai' : 'basfi'}')">
       <div class="slider-ticks">${Array.from({length:11},(_,i)=>`<span>${i}</span>`).join('')}</div>
       <div class="slider-value-row">
-        <span class="slider-val" id="sv-${id}">${pristine ? '—' : fmt(val)}</span>
+        <span class="slider-val" id="sv-${id}">${pristine ? hint : fmt(val)}</span>
       </div>
-      ${pristine ? `<div class="pristine-hint" id="ph-${id}">${hint}</div>` : ''}
     </div>`;
 }
 
@@ -795,8 +790,6 @@ function onSlider(id, rawVal, section) {
   if (sv) sv.textContent = fmt(v);
   const sw = document.getElementById(`sw-${id}`);
   if (sw) sw.classList.remove('pristine');
-  const ph = document.getElementById(`ph-${id}`);
-  if (ph) ph.remove();
   section === 'basdai' ? calcBASDAI() : calcBASFI();
   refreshProgress();
 }
